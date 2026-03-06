@@ -65,11 +65,8 @@ const HomePage = () => {
   const [scrollIdx, setScrollIdx] = useState(0);
   const cardRef = useRef(null);
 
-  // Redirect logged-in users to their dashboard
-  if (user) {
-    const dest = user.role === 'Admin' ? '/admin' : user.role === 'Coach' ? '/coach' : '/customer';
-    return <Navigate to={dest} replace />;
-  }
+  // Determine dashboard route for logged-in users
+  const dashboardPath = user ? (user.role === 'Admin' ? '/admin' : user.role === 'Coach' ? '/coach' : '/customer') : '';
 
   const scrollCards = (dir) => {
     const next = scrollIdx + dir;
@@ -127,10 +124,17 @@ const HomePage = () => {
             {/* CTAs */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
               className="flex flex-wrap items-center gap-4">
-              <Link to="/register"
-                className="flex items-center gap-2 bg-primary text-background font-bold px-8 py-4 rounded-xl hover:bg-primary/90 hover:shadow-[0_0_25px_rgba(0,242,254,0.4)] transition-all text-base">
-                Start Training <ArrowRight className="w-5 h-5" />
-              </Link>
+              {user ? (
+                <Link to={dashboardPath}
+                  className="flex items-center gap-2 bg-primary text-background font-bold px-8 py-4 rounded-xl hover:bg-primary/90 hover:shadow-[0_0_25px_rgba(0,242,254,0.4)] transition-all text-base">
+                  Go to Dashboard <ArrowRight className="w-5 h-5" />
+                </Link>
+              ) : (
+                <Link to="/register"
+                  className="flex items-center gap-2 bg-primary text-background font-bold px-8 py-4 rounded-xl hover:bg-primary/90 hover:shadow-[0_0_25px_rgba(0,242,254,0.4)] transition-all text-base">
+                  Start Training <ArrowRight className="w-5 h-5" />
+                </Link>
+              )}
               <button
                 className="flex items-center gap-3 text-white font-medium px-4 py-4 hover:text-primary transition-colors group">
                 <span className="w-12 h-12 rounded-full border-2 border-white/20 flex items-center justify-center group-hover:border-primary/50 transition-colors">
@@ -295,14 +299,23 @@ const HomePage = () => {
               </div>
 
               <div className="flex gap-4 pt-2">
-                <Link to="/register"
-                  className="flex items-center gap-2 bg-primary text-background font-bold px-7 py-3.5 rounded-xl hover:bg-primary/90 transition-all hover:shadow-[0_0_20px_rgba(0,242,254,0.3)]">
-                  Get Started <ArrowRight className="w-4 h-4" />
-                </Link>
-                <Link to="/login"
-                  className="flex items-center gap-2 border border-white/20 text-white font-medium px-7 py-3.5 rounded-xl hover:bg-white/5 transition-all">
-                  Sign In
-                </Link>
+                {user ? (
+                   <Link to={dashboardPath}
+                     className="flex items-center gap-2 bg-primary text-background font-bold px-7 py-3.5 rounded-xl hover:bg-primary/90 transition-all hover:shadow-[0_0_20px_rgba(0,242,254,0.3)]">
+                     Go to Dashboard <ArrowRight className="w-4 h-4" />
+                   </Link>
+                ) : (
+                   <>
+                     <Link to="/register"
+                       className="flex items-center gap-2 bg-primary text-background font-bold px-7 py-3.5 rounded-xl hover:bg-primary/90 transition-all hover:shadow-[0_0_20px_rgba(0,242,254,0.3)]">
+                       Get Started <ArrowRight className="w-4 h-4" />
+                     </Link>
+                     <Link to="/login"
+                       className="flex items-center gap-2 border border-white/20 text-white font-medium px-7 py-3.5 rounded-xl hover:bg-white/5 transition-all">
+                       Sign In
+                     </Link>
+                   </>
+                )}
               </div>
             </motion.div>
           </div>
@@ -321,10 +334,17 @@ const HomePage = () => {
             <p className="text-gray-400 text-lg max-w-xl mx-auto mb-8">
               Join thousands of members already crushing their fitness goals with Gym Next Gen.
             </p>
-            <Link to="/register"
-              className="inline-flex items-center gap-2 bg-primary text-background font-bold px-10 py-4 rounded-xl text-base hover:bg-primary/90 hover:shadow-[0_0_30px_rgba(0,242,254,0.4)] transition-all">
-              Start for Free <ArrowRight className="w-5 h-5" />
-            </Link>
+            {user ? (
+              <Link to={dashboardPath}
+                className="inline-flex items-center gap-2 bg-primary text-background font-bold px-10 py-4 rounded-xl text-base hover:bg-primary/90 hover:shadow-[0_0_30px_rgba(0,242,254,0.4)] transition-all">
+                Go to Dashboard <ArrowRight className="w-5 h-5" />
+              </Link>
+            ) : (
+              <Link to="/register"
+                className="inline-flex items-center gap-2 bg-primary text-background font-bold px-10 py-4 rounded-xl text-base hover:bg-primary/90 hover:shadow-[0_0_30px_rgba(0,242,254,0.4)] transition-all">
+                Start for Free <ArrowRight className="w-5 h-5" />
+              </Link>
+            )}
           </motion.div>
         </div>
       </section>

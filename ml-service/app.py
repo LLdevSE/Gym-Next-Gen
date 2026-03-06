@@ -4,121 +4,123 @@ import joblib
 import pandas as pd
 import numpy as np
 import warnings
+import random
 
-# Suppress sklearn warnings for cleaner terminal output
 warnings.filterwarnings("ignore", category=UserWarning)
 
 app = Flask(__name__)
-CORS(app) # Allows your Node.js backend to make requests to this API
+CORS(app)
 
 print("Loading AI Models and Databases...")
 
-# 1. Load the Workout Models
-workout_model = joblib.load('workout_model.pkl')
-gender_encoder = joblib.load('gender_encoder.pkl')
+workout_model   = joblib.load('workout_model.pkl')
+gender_encoder  = joblib.load('gender_encoder.pkl')
 workout_encoder = joblib.load('workout_encoder.pkl')
+df_food         = pd.read_csv('gym_nutrition_database.csv')
 
-# 2. Load the Nutrition Models & Database
-nutrition_model = joblib.load('nutrition_model.pkl')
-nutrition_scaler = joblib.load('nutrition_scaler.pkl')
-df_food = pd.read_csv('gym_nutrition_database.csv')
+print(f"✅ All systems online. {len(df_food)} foods loaded.")
 
-print("✅ All systems online. ML Microservice running.")
+
+# Strict pool: only foods of these types are used for each workout
+WORKOUT_DIET_POOLS = {
+    "Strength": ["High Protein", "Keto/High Protein", "Balanced/High Protein",
+                 "High Calorie", "High Protein/Low Cal", "High Protein/Balanced"],
+    "HIIT":     ["Low Calorie", "Vegan/Low Calorie", "Balanced", "Low Carb",
+                 "Vegan/Balanced", "High Protein/Low Cal", "Low Carb/High Protein"],
+    "Cardio":   ["Low Calorie", "Vegan/Low Calorie", "Balanced", "Low Carb",
+                 "Vegan/Balanced", "Low Carb/High Protein"],
+    "Yoga":     ["Vegan/Balanced", "Balanced", "Vegan/Low Calorie",
+                 "Low Calorie", "Vegan/High Protein"],
+}
+
 
 @app.route('/predict', methods=['POST'])
 def predict_blueprint():
     try:
-        # 1. Get user data from the incoming JSON request
-        data = request.json
-        age = float(data['age'])
-        weight = float(data['weight'])
-        height_m = float(data['height_cm']) / 100  # Convert cm to meters
-        fat_percentage = float(data['fat_percentage'])
-        gender_text = data['gender'] # 'Male' or 'Female'
+        data        = request.json
+        age         = float(data['age'])
+        weight      = float(data['weight'])
+        height_m    = float(data['height_cm']) / 100
+        fat_pct     = float(data['fat_percentage'])
+        gender_text = data.get('gender', 'Male')
 
-        # 2. Preprocess the input
+        # ── BMI ────────────────────────────────────────────────
         bmi = weight / (height_m ** 2)
-        
-        # Handle unseen gender labels gracefully
+
+        # ── Encode gender ───────────────────────────────────────
         try:
-            gender_encoded = gender_encoder.transform([gender_text])[0]
+            gender_enc = gender_encoder.transform([gender_text])[0]
         except ValueError:
-            gender_encoded = 0 # Default fallback
-            
-        # Create the feature array expected by the Random Forest Model
-        # Order: ['Age', 'Gender', 'BMI', 'Fat_Percentage']
-        user_features = np.array([[age, gender_encoded, bmi, fat_percentage]])
+            gender_enc = 0
 
-        # 3. Predict Workout Type
-        workout_pred_idx = workout_model.predict(user_features)[0]
-        predicted_workout = workout_encoder.inverse_transform([workout_pred_idx])[0]
+        # ── Workout prediction ──────────────────────────────────
+        feats = np.array([[age, gender_enc, bmi, fat_pct]])
+        predicted_workout = workout_encoder.inverse_transform(
+            [workout_model.predict(feats)[0]]
+        )[0]
 
-        # 4. Map Recommended Coaches (Rule-Based Logic)
+        # ── Coach mapping ───────────────────────────────────────
         coach_mapping = {
             "Strength": ["Strength & Conditioning Coach", "Bodybuilding Specialist"],
-            "Cardio": ["Endurance Specialist", "Weight Loss Coach"],
-            "Yoga": ["Yoga & Mobility Instructor", "Corrective Exercise Specialist"],
-            "HIIT": ["HIIT & Cross-Training Coach", "Weight Loss Coach"]
+            "Cardio":   ["Endurance Specialist", "Weight Loss Coach"],
+            "Yoga":     ["Yoga & Mobility Instructor", "Corrective Exercise Specialist"],
+            "HIIT":     ["HIIT & Cross-Training Coach", "Weight Loss Coach"],
         }
-        recommended_coaches = coach_mapping.get(predicted_workout, ["General Fitness PT"])
+        coaches = coach_mapping.get(predicted_workout, ["General Fitness PT"])
 
-        # 5. The "Bridge": Calculate Caloric and Macro Targets based on Workout
-        # Simple BMR calculation (Mifflin-St Jeor Equation)
-        if gender_text.lower() == 'male':
-            bmr = (10 * weight) + (6.25 * (height_m * 100)) - (5 * age) + 5
-        else:
-            bmr = (10 * weight) + (6.25 * (height_m * 100)) - (5 * age) - 161
+        # ── TDEE — Mifflin-St Jeor ──────────────────────────────
+        s = 5 if gender_text.lower() == 'male' else -161
+        bmr  = (10 * weight) + (6.25 * (height_m * 100)) - (5 * age) + s
 
-        # Adjust TDEE (Total Daily Energy Expenditure) and Macros based on predicted workout
         if predicted_workout == "Strength":
-            tdee = bmr * 1.55 + 300 # Surplus for muscle gain
-            protein, carbs, fat = (weight * 2.2), (tdee * 0.45 / 4), (tdee * 0.25 / 9)
-        elif predicted_workout == "HIIT" or predicted_workout == "Cardio":
-            tdee = bmr * 1.55 - 300 # Deficit for fat loss
-            protein, carbs, fat = (weight * 1.8), (tdee * 0.35 / 4), (tdee * 0.30 / 9)
-        else: # Yoga / Maintenance
+            tdee = bmr * 1.55 + 300
+        elif predicted_workout in ("HIIT", "Cardio"):
+            tdee = bmr * 1.55 - 300
+        else:
             tdee = bmr * 1.375
-            protein, carbs, fat = (weight * 1.6), (tdee * 0.40 / 4), (tdee * 0.30 / 9)
 
-        # 6. Predict Nutrition (KNN Model)
-        # We divide targets by 3 assuming 3 main meals a day
-        target_macros = pd.DataFrame(
-            [[(tdee/3), (protein/3), (carbs/3), (fat/3)]], 
-            columns=['Calories', 'Protein_g', 'Carbs_g', 'Fat_g']
-        )
-        target_scaled = nutrition_scaler.transform(target_macros)
-        
-        # Find 3 closest meal matches
-        distances, indices = nutrition_model.kneighbors(target_scaled)
-        
-        recommended_meals = []
-        for i in range(len(indices[0])):
-            meal_idx = indices[0][i]
-            meal = {
-                "name": str(df_food.iloc[meal_idx]['Food_Name']),
-                "calories": int(df_food.iloc[meal_idx]['Calories']),
-                "protein": int(df_food.iloc[meal_idx]['Protein_g']),
-                "diet_type": str(df_food.iloc[meal_idx]['Diet_Type'])
-            }
-            recommended_meals.append(meal)
+        # ── Filter food pool ────────────────────────────────────
+        allowed_types = WORKOUT_DIET_POOLS.get(predicted_workout, [])
+        df_pool = df_food[df_food['Diet_Type'].isin(allowed_types)].copy()
+        if len(df_pool) < 5:
+            df_pool = df_food.copy()   # fallback to full DB
 
-        # 7. Construct and return the final API response
+        # ── Score each food by calorie proximity to per-meal target ──
+        per_meal_cal = tdee / 3
+        df_pool = df_pool.reset_index(drop=True)
+        df_pool['_dist'] = abs(df_pool['Calories'] - per_meal_cal)
+        df_pool_sorted = df_pool.sort_values('_dist')
+
+        # Take top-12 candidates, then randomly sample 3 of them
+        top_candidates = df_pool_sorted.head(12)
+        n_pick = min(3, len(top_candidates))
+        selected = top_candidates.sample(n=n_pick, random_state=None)  # None = truly random
+
+        meals = []
+        for _, row in selected.iterrows():
+            meals.append({
+                "name":      str(row['Food_Name']),
+                "calories":  int(row['Calories']),
+                "protein":   int(row['Protein_g']),
+                "diet_type": str(row['Diet_Type']),
+            })
+
         return jsonify({
             "status": "success",
             "diagnostics": {
-                "calculated_bmi": round(bmi, 1),
-                "calculated_tdee_calories": round(tdee)
+                "calculated_bmi":            round(bmi, 1),
+                "calculated_tdee_calories":  round(tdee),
             },
             "blueprint": {
-                "workout_type": predicted_workout,
-                "recommended_coaches": recommended_coaches,
-                "meal_plan": recommended_meals
+                "workout_type":        predicted_workout,
+                "recommended_coaches": coaches,
+                "meal_plan":           meals,
             }
         })
 
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 400
 
+
 if __name__ == '__main__':
-    # Run the Flask app on port 5000
     app.run(host='0.0.0.0', port=5000, debug=True)
