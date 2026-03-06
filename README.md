@@ -332,4 +332,4 @@ _(Runs on Vite's default dev instance block, typical resolution: `http://localho
 
 ---
 
-_Created with ❤️ by the Gym Next Gen Development Team | Shaping the Future of Fitness Technology._
+_Created with ❤️ by LLdevSE | Shaping the Future of Fitness Technology._
