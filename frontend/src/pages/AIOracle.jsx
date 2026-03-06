@@ -83,6 +83,22 @@ const AIOracle = () => {
                <h2 className="text-2xl font-heading text-primary mb-8 border-b border-white/10 pb-4">Calibration Metrics</h2>
                
                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                  {/* Gender Toggle */}
+                  <div className="md:col-span-2">
+                     <label className="block text-sm font-medium text-gray-400 mb-3 uppercase tracking-wider">Biological Sex</label>
+                     <div className="flex gap-3">
+                        {['Male', 'Female'].map(g => (
+                           <button key={g} type="button"
+                              onClick={() => setFormData({...formData, gender: g})}
+                              className={`flex-1 py-3 rounded border font-heading tracking-widest text-sm transition-all duration-200
+                                 ${formData.gender === g
+                                    ? 'bg-secondary text-background border-secondary shadow-[0_0_15px_rgba(79,172,254,0.4)]'
+                                    : 'bg-surface/50 text-gray-400 border-white/10 hover:border-secondary/50 hover:text-white'}`}>
+                              {g === 'Male' ? '♂ MALE' : '♀ FEMALE'}
+                           </button>
+                        ))}
+                     </div>
+                  </div>
                   <div>
                      <label className="block text-sm font-medium text-gray-400 mb-2 uppercase tracking-wider">Biological Age</label>
                      <input type="number" className="w-full bg-surface/50 border border-white/10 rounded py-3 px-4 text-white font-mono text-xl focus:outline-none focus:border-secondary transition-colors" value={formData.age} onChange={e=> setFormData({...formData, age: e.target.value})} />
@@ -125,6 +141,20 @@ const AIOracle = () => {
                <div className="text-center mb-8">
                   <h2 className="text-4xl font-heading text-white">PROTOCOL GENERATED</h2>
                   <p className="text-secondary font-mono tracking-widest mt-2 bg-secondary/10 inline-block px-4 py-1 border border-secondary/30 rounded">Match Rate: 98.7%</p>
+                  {/* Diagnostics strip */}
+                  <div className="flex flex-wrap items-center justify-center gap-4 mt-4">
+                     <span className="text-xs font-mono px-3 py-1 rounded-full border border-white/10 text-gray-400">
+                       SEX: <span className="text-white">{formData.gender?.toUpperCase()}</span>
+                     </span>
+                     {blueprint.bmi && (
+                       <span className="text-xs font-mono px-3 py-1 rounded-full border border-white/10 text-gray-400">
+                          BMI: <span className={`${blueprint.bmi < 18.5 ? 'text-blue-400' : blueprint.bmi < 25 ? 'text-green-400' : blueprint.bmi < 30 ? 'text-yellow-400' : 'text-red-400'}`}>{blueprint.bmi}</span>
+                       </span>
+                     )}
+                     <span className="text-xs font-mono px-3 py-1 rounded-full border border-white/10 text-gray-400">
+                       TDEE: <span className="text-primary">{blueprint.calories} kcal/day</span>
+                     </span>
+                  </div>
                </div>
 
                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -15,6 +15,7 @@ const coachRoutes = require('./routes/coachRoutes');
 const productRoutes = require('./routes/productRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const mlRoutes = require('./routes/mlRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use('/api/coaches', coachRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/ml', mlRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // Basic Route
 app.get('/', (req, res) => {

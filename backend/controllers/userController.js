@@ -155,6 +155,33 @@ const adminCreateUser = async (req, res) => {
   }
 };
 
+// @desc    Admin Update any user's details (name, email, profileImage)
+// @route   PUT /api/users/:id
+// @access  Private/Admin
+const adminUpdateUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    user.name         = req.body.name         ?? user.name;
+    user.email        = req.body.email        ?? user.email;
+    user.profileImage = req.body.profileImage ?? user.profileImage;
+    if (req.body.membershipStatus) user.membershipStatus = req.body.membershipStatus;
+
+    const updated = await user.save();
+    res.json({
+      _id: updated._id,
+      name: updated.name,
+      email: updated.email,
+      role: updated.role,
+      profileImage: updated.profileImage,
+      membershipStatus: updated.membershipStatus,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // @desc    Delete user and cascade CoachProfile deletion
 // @route   DELETE /api/users/:id
 // @access  Private/Admin
@@ -172,4 +199,4 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { authUser, registerUser, getUserProfile, getUsers, updateUserStatus, deleteUser, adminCreateUser };
+module.exports = { authUser, registerUser, getUserProfile, getUsers, updateUserStatus, deleteUser, adminCreateUser, adminUpdateUser };
