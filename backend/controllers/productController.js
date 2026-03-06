@@ -29,12 +29,12 @@ const getProductById = async (req, res) => {
 // @access  Private/Admin
 const createProduct = async (req, res) => {
   const product = new Product({
-    name: 'Sample name',
-    price: 0,
-    category: 'Equipment', // Requires valid enum
-    stock: 0,
-    imageUrl: '/images/sample.jpg',
-    description: 'Sample description',
+    name: req.body.name || 'New Product',
+    price: req.body.price || 0,
+    category: req.body.category || 'Equipment',
+    stock: req.body.stock || 0,
+    imageUrl: req.body.imageUrl || '/images/sample.jpg',
+    description: req.body.description || 'Sample description',
   });
 
   const createdProduct = await product.save();

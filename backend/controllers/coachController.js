@@ -64,4 +64,42 @@ const updateCoachProfile = async (req, res) => {
   }
 };
 
-module.exports = { getCoaches, getCoachById, createCoachProfile, updateCoachProfile };
+// @desc    Admin Update any coach profile by ID
+// @route   PUT /api/coaches/admin/:id
+// @access  Private/Admin
+const adminUpdateCoachProfile = async (req, res, next) => {
+  try {
+    const { specialization, bio, availableSessions } = req.body;
+    const coach = await CoachProfile.findById(req.params.id);
+
+    if (coach) {
+      coach.specialization = specialization || coach.specialization;
+      coach.bio = bio || coach.bio;
+      coach.availableSessions = availableSessions || coach.availableSessions;
+      const updatedCoach = await coach.save();
+      res.json(updatedCoach);
+    } else {
+      res.status(404).json({ message: 'Coach profile not found' });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Get logged-in coach's own profile
+// @route   GET /api/coaches/myprofile
+// @access  Private/Coach
+const getMyCoachProfile = async (req, res, next) => {
+  try {
+    const profile = await CoachProfile.findOne({ user: req.user._id }).populate('user', 'name email profileImage');
+    if (profile) {
+      res.json(profile);
+    } else {
+      res.status(404).json({ message: 'Coach profile not found' });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { getCoaches, getCoachById, createCoachProfile, updateCoachProfile, adminUpdateCoachProfile, getMyCoachProfile };

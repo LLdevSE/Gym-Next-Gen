@@ -6,6 +6,8 @@ import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
 import CoachDashboard from "./pages/CoachDashboard";
 import CustomerDashboard from "./pages/CustomerDashboard";
+import CoachDirectory from "./pages/CoachDirectory";
+import AIOracle from "./pages/AIOracle";
 import Store from "./pages/Store";
 import Cart from "./pages/Cart";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -13,7 +15,7 @@ import { CartProvider } from "./context/CartContext";
 
 function App() {
   return (
-    <Router>
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <AuthProvider>
         <CartProvider>
           <div className="min-h-screen bg-background text-foreground selection:bg-primary/30 flex flex-col">
@@ -29,6 +31,8 @@ function App() {
                 <Route path="/coach" element={<ProtectedRoute allowedRoles={['Coach']}><CoachDashboard /></ProtectedRoute>} />
                 <Route path="/customer" element={<ProtectedRoute allowedRoles={['Customer']}><CustomerDashboard /></ProtectedRoute>} />
                 
+                <Route path="/coaches" element={<ProtectedRoute><CoachDirectory /></ProtectedRoute>} />
+                <Route path="/oracle" element={<ProtectedRoute allowedRoles={['Customer']}><AIOracle /></ProtectedRoute>} />
                 <Route path="/store" element={<ProtectedRoute><Store /></ProtectedRoute>} />
                 <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
               </Routes>

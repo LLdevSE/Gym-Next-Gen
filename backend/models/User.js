@@ -24,6 +24,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: 'https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg',
     },
+    membershipStatus: {
+      type: String,
+      enum: ['Active', 'Suspended'],
+      default: 'Active',
+    },
   },
   {
     timestamps: true,
