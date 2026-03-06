@@ -1,8 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import HomePage from "./pages/HomePage";
 import AdminDashboard from "./pages/AdminDashboard";
 import CoachDashboard from "./pages/CoachDashboard";
 import CustomerDashboard from "./pages/CustomerDashboard";
@@ -22,15 +23,15 @@ function App() {
             <Navbar />
             <main className="container mx-auto px-4 py-8 flex-grow">
               <Routes>
-                <Route path="/" element={<div className="text-center py-20"><h1 className="text-5xl font-heading text-primary mb-4">GYM NEXT GEN</h1><p className="text-muted-foreground">The future of fitness</p></div>} />
+                <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                
+
                 {/* Protected Routes */}
                 <Route path="/admin" element={<ProtectedRoute allowedRoles={['Admin']}><AdminDashboard /></ProtectedRoute>} />
                 <Route path="/coach" element={<ProtectedRoute allowedRoles={['Coach']}><CoachDashboard /></ProtectedRoute>} />
                 <Route path="/customer" element={<ProtectedRoute allowedRoles={['Customer']}><CustomerDashboard /></ProtectedRoute>} />
-                
+
                 <Route path="/coaches" element={<ProtectedRoute><CoachDirectory /></ProtectedRoute>} />
                 <Route path="/oracle" element={<ProtectedRoute allowedRoles={['Customer']}><AIOracle /></ProtectedRoute>} />
                 <Route path="/store" element={<ProtectedRoute><Store /></ProtectedRoute>} />

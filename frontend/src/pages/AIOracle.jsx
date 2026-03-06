@@ -26,20 +26,23 @@ const AIOracle = () => {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
         const { data } = await axios.post('/api/ml/predict', formData, config);
         
-        // Simulate network/processing delay for dramatic effect
+        // Try real ML response first, then mocked fallback
+        const result = data.modelPrediction || data.mockedResponse;
+        
         setTimeout(() => {
-           setBlueprint(data.mockedResponse || data.modelPrediction || {
-              workout: "Advanced Strength & Power",
-              calories: 2800,
-              meals: ["6 Egg Whites + Oatmeal", "200g Chicken breast + Rice + Broccoli", "Salmon + Asparagus + Sweet Potato"]
+           setBlueprint(result || {
+              workout: 'Strength & Hypertrophy',
+              calories: 2500,
+              meals: ['Oatmeal & Eggs', 'Chicken & Rice', 'Steak & Potatoes'],
+              coaches: [],
+              bmi: null,
            });
-           handleNext(); // move to results
+           handleNext();
         }, 2500);
      } catch(e) {
         console.error(e);
-        // Fallback for visual demo
         setTimeout(() => {
-           setBlueprint({ workout: "Error processing via ML service", calories: 0, meals: [] });
+           setBlueprint({ workout: 'Error connecting to ML service', calories: 0, meals: [], coaches: [], bmi: null });
            handleNext();
         }, 2000);
      }
@@ -153,15 +156,31 @@ const AIOracle = () => {
                   </div>
                </div>
 
-               {/* Action Area */}
-               <div className="glass-card p-8 mt-6 flex flex-col items-center bg-primary/5 border-primary/20">
-                  <Users className="w-12 h-12 text-primary mb-4" />
-                  <h3 className="text-xl text-white mb-2">Ready to execute the plan?</h3>
-                  <p className="text-gray-400 mb-6 text-center max-w-lg">We have dynamically updated our coach directory to highlight trainers specialized in {blueprint.workout}.</p>
-                  <Link to="/coaches" className="bg-white text-background font-bold uppercase tracking-wider px-8 py-4 rounded hover:bg-gray-200 transition-colors shadow">
-                     View Targeted Coaches
-                  </Link>
-               </div>
+               {/* Coach Recommendation */}
+               {blueprint.coaches && blueprint.coaches.length > 0 && (
+                 <div className="glass-card p-8 mt-6 flex flex-col items-center bg-primary/5 border-primary/20">
+                    <Users className="w-12 h-12 text-primary mb-4" />
+                    <h3 className="text-xl text-white mb-2">AI-Recommended Coach Types</h3>
+                    <div className="flex gap-3 flex-wrap justify-center mb-6">
+                       {blueprint.coaches.map((c, i) => (
+                          <span key={i} className="px-4 py-1.5 bg-primary/10 text-primary border border-primary/30 rounded-full text-sm">{c}</span>
+                       ))}
+                    </div>
+                    <Link to="/coaches" className="bg-white text-background font-bold uppercase tracking-wider px-8 py-4 rounded hover:bg-gray-200 transition-colors shadow">
+                       View Targeted Coaches
+                    </Link>
+                 </div>
+               )}
+               {(!blueprint.coaches || blueprint.coaches.length === 0) && (
+                  <div className="glass-card p-8 mt-6 flex flex-col items-center bg-primary/5 border-primary/20">
+                     <Users className="w-12 h-12 text-primary mb-4" />
+                     <h3 className="text-xl text-white mb-2">Ready to execute the plan?</h3>
+                     <p className="text-gray-400 mb-6 text-center max-w-lg">We have dynamically updated our coach directory to highlight trainers specialized in {blueprint.workout}.</p>
+                     <Link to="/coaches" className="bg-white text-background font-bold uppercase tracking-wider px-8 py-4 rounded hover:bg-gray-200 transition-colors shadow">
+                        View Targeted Coaches
+                     </Link>
+                  </div>
+               )}
                
                <div className="text-center pt-8">
                   <button onClick={() => setCurrentStep(0)} className="text-sm text-gray-500 hover:text-white underline font-mono">RECALIBRATE PARAMS</button>
