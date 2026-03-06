@@ -10,15 +10,43 @@
 
 ## 📑 Table of Contents
 
-1. [System Architecture](#-system-architecture)
-2. [Entity Relationship Diagram (ERD)](#-entity-relationship-diagram-erd)
-3. [UML Class Diagram](#-uml-class-diagram)
-4. [Sequence Diagram: AI Blueprint Generation](#-sequence-diagram-ai-blueprint-generation)
-5. [Core Features & Functions](#-core-features--functions)
-6. [Machine Learning Engine: Deep Dive](#-machine-learning-engine-deep-dive)
-7. [Technologies & Frameworks](#-technologies--frameworks)
-8. [Software Design Patterns](#-software-design-patterns)
-9. [Running the Application locally](#-running-the-application-locally)
+1. [Development Methodology & Lifecycle](#-development-methodology--lifecycle)
+2. [System Architecture](#-system-architecture)
+3. [Entity Relationship Diagram (ERD)](#-entity-relationship-diagram-erd)
+4. [UML Class Diagram](#-uml-class-diagram)
+5. [Sequence Diagram: AI Blueprint Generation](#-sequence-diagram-ai-blueprint-generation)
+6. [Core Features & Functions](#-core-features--functions)
+7. [Machine Learning Engine: Deep Dive](#-machine-learning-engine-deep-dive)
+8. [Technologies & Frameworks](#-technologies--frameworks)
+9. [Software Design Patterns](#-software-design-patterns)
+10. [Running the Application locally](#-running-the-application-locally)
+
+---
+
+## 🔄 Development Methodology & Lifecycle
+
+**Gym Next Gen** was developed utilizing the **Agile Methodology**, specifically adhering to **Scrum** principles. Agile is the industry standard for modern, multi-tiered modular applications like the MERN stack coupled with Python microservices.
+
+It was chosen for its iterative nature, enabling rapid prototyping and continuous feedback mapping.
+
+### 1. Iterative & Incremental Development (Sprints)
+
+The project lifecycle was divided into focused phases:
+
+- **Backend Foundations:** Initiating the database schemas (MongoDB), establishing RBAC via JWT, and defining Express.js routing structures.
+- **AI Microservice:** Concurrently scaffolding the Python Flask environment, training the Scikit-Learn `Random Forest` models, and constructing the Pandas nutrition logic.
+- **Frontend Consumption:** Incrementally building the React interface using **Component-Driven Development (CDD)**, allowing smaller, isolated components (e.g., `Navbar`, `ImageUpload`) to be assembled into complex dashboard ecosystems.
+
+### 2. Component-Driven Development (CDD)
+
+For the React frontend, UI elements were built from the "bottom-up". This ensures that discrete pieces of the interface are reusable, rigidly tested, and maintain visual consistency (via TailwindCSS) before being imported into core pages like the `CustomerDashboard` or `AIOracle`.
+
+### 3. Continuous Integration & Decoupled Architecture
+
+Because the system employs a **Microservices Architecture** (separating the Node.js API from the Python ML API), Agile facilitates independent lifecycle management:
+
+- **Independent Scaling & Deployment:** The Machine Learning endpoint can be fine-tuned, re-trained, and redeployed entirely independently of the core React/Node ecosystem.
+- **Adaptability:** Modifications to the ML prediction pool or frontend layout can be executed rapidly without creating blocking dependencies across the entire project pipeline.
 
 ---
 
