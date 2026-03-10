@@ -1,10 +1,12 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Activity, LogOut, LayoutDashboard, Users, ShoppingBag, Zap, Shield, Dumbbell } from 'lucide-react';
+import { useCart } from '../context/CartContext';
+import { Activity, LogOut, LayoutDashboard, Users, ShoppingBag, Zap, Shield, Dumbbell, ShoppingCart } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
+  const { cartItems } = useCart();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -87,6 +89,15 @@ const Navbar = () => {
 
                 {/* User info + logout */}
                 <div className="flex items-center gap-3 border-l border-white/10 pl-5">
+                  <Link to="/cart" className="relative text-gray-400 hover:text-primary transition-colors p-1.5 rounded-lg hover:bg-white/5 mr-2">
+                    <ShoppingCart className="w-5 h-5" />
+                    {cartItems.length > 0 && (
+                      <span className="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-primary rounded-full">
+                        {cartItems.reduce((acc, item) => acc + item.qty, 0)}
+                      </span>
+                    )}
+                  </Link>
+
                   <Link to={dashboardPath} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
                     <img src={user.profileImage} alt="Profile" className="w-8 h-8 rounded-full border border-primary/50 object-cover" />
                     <span className="text-sm font-medium hidden md:block text-white">{user.name}</span>

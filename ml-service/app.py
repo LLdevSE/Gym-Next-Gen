@@ -38,6 +38,8 @@ WORKOUT_DIET_POOLS = {
 def predict_blueprint():
     try:
         data        = request.json
+        print("\n[DEBUG] 🚀 INCOMING AI REQUEST (AXIOS HTTP POST):")
+        print(data)
         age         = float(data['age'])
         weight      = float(data['weight'])
         height_m    = float(data['height_cm']) / 100
@@ -84,6 +86,9 @@ def predict_blueprint():
         df_pool = df_food[df_food['Diet_Type'].isin(allowed_types)].copy()
         if len(df_pool) < 5:
             df_pool = df_food.copy()   # fallback to full DB
+
+        print(f"\n[DEBUG] 📊 FILTERED FOOD POOL HEAD ({len(df_pool)} items):")
+        print(df_pool.head())
 
         # ── Score each food by calorie proximity to per-meal target ──
         per_meal_cal = tdee / 3

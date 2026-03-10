@@ -14,12 +14,13 @@
 2. [System Architecture](#-system-architecture)
 3. [Entity Relationship Diagram (ERD)](#-entity-relationship-diagram-erd)
 4. [UML Class Diagram](#-uml-class-diagram)
-5. [Sequence Diagram: AI Blueprint Generation](#-sequence-diagram-ai-blueprint-generation)
-6. [Core Features & Functions](#-core-features--functions)
-7. [Machine Learning Engine: Deep Dive](#-machine-learning-engine-deep-dive)
-8. [Technologies & Frameworks](#-technologies--frameworks)
-9. [Software Design Patterns](#-software-design-patterns)
-10. [Running the Application locally](#-running-the-application-locally)
+5. [UML Use Case Diagram](#-uml-use-case-diagram)
+6. [Sequence Diagram: AI Blueprint Generation](#-sequence-diagram-ai-blueprint-generation)
+7. [Core Features & Functions](#-core-features--functions)
+8. [Machine Learning Engine: Deep Dive](#-machine-learning-engine-deep-dive)
+9. [Technologies & Frameworks](#-technologies--frameworks)
+10. [Software Design Patterns](#-software-design-patterns)
+11. [Running the Application locally](#-running-the-application-locally)
 
 ---
 
@@ -187,6 +188,94 @@ classDiagram
     User <|-- CoachProfile : Composition
     User "1" *-- "*" Booking : Aggregation (Customer)
     User "1" *-- "*" Booking : Aggregation (Coach)
+```
+
+---
+
+## 👥 UML Use Case Diagram
+
+This comprehensive use case diagram maps out the primary user personas (Actors), secondary systems (AI Microservice), and their respective functional capabilities, including advanced `<<include>>` and `<<extend>>` behaviors.
+
+```mermaid
+flowchart LR
+    %% Actors
+    Guest(["👤 Guest"])
+    Admin(["👑 Admin"])
+    Coach(["🏋️ Coach"])
+    Customer(["🏃 Customer"])
+    AI(["🤖 AI Oracle Service"])
+
+    %% System Boundary
+    subgraph Gym_Next_Gen ["Gym Next Gen System"]
+        direction TB
+
+        %% Core Auth
+        UC_Reg(["Register Account"])
+        UC_Log(["Login / Authenticate"])
+
+        %% Admin Use Cases
+        UC1(["Manage User Lifecycle & Roles"])
+        UC2(["Manage E-commerce Inventory"])
+        UC3(["Platform Oversight (Suspend/Ban)"])
+
+        %% Coach Use Cases
+        UC4(["Modify Specializations & Bio"])
+        UC5(["Manage Session Availability"])
+        UC6(["Review Booking Requests"])
+        UC_Confirm(["Confirm/Decline Sessions"])
+
+        %% Customer Use Cases
+        UC7(["Generate AI Fitness Blueprint"])
+        UC8(["Discover & Filter Coaches"])
+        UC9(["Book Training Sessions"])
+        UC10(["Purchase Store Products"])
+
+        %% AI / Microservice Use Cases
+        UC11(["Compute BMR & TDEE Metrics"])
+        UC12(["Predict Optimal Workout (Random Forest)"])
+        UC13(["Generate Nutrition Plan (Pandas)"])
+    end
+
+    %% Guest Relationships
+    Guest --- UC_Reg
+    Guest --- UC_Log
+
+    %% Admin Relationships
+    Admin --- UC_Log
+    Admin --- UC1
+    Admin --- UC2
+    Admin --- UC3
+
+    %% Coach Relationships
+    Coach --- UC_Log
+    Coach --- UC4
+    Coach --- UC5
+    Coach --- UC6
+    UC6 -. "<<include>>" .-> UC_Confirm
+
+    %% Customer Relationships
+    Customer --- UC_Log
+    Customer --- UC7
+    Customer --- UC8
+    Customer --- UC9
+    Customer --- UC10
+
+    %% AI / Core Generation Relationships
+    UC7 -. "<<include>>" .-> UC12
+    UC7 -. "<<include>>" .-> UC13
+    UC12 -. "<<extend>>" .-> UC11
+    UC13 -. "<<extend>>" .-> UC11
+
+    %% AI Secondary Actor
+    AI --- UC11
+    AI --- UC12
+    AI --- UC13
+
+    %% Styling to mimic UML standards
+    classDef actor fill:#f3f4f6,stroke:#111827,stroke-width:2px;
+    classDef usecase fill:#e0f2fe,stroke:#0284c7,stroke-width:2px;
+    class Guest,Admin,Coach,Customer,AI actor;
+    class UC_Reg,UC_Log,UC1,UC2,UC3,UC4,UC5,UC6,UC_Confirm,UC7,UC8,UC9,UC10,UC11,UC12,UC13 usecase;
 ```
 
 ---
