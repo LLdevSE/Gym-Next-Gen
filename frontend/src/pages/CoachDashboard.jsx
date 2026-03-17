@@ -14,7 +14,7 @@ const CoachDashboard = () => {
   const { user } = useAuth();
 
   // Form state for editing profile
-  const [editForm, setEditForm] = useState({ specialization: '', bio: '', availableSessions: [] });
+  const [editForm, setEditForm] = useState({ specialization: 'Strength', bio: '', availableSessions: [] });
   const sessions = ['Morning', 'Evening', 'Night'];
   const sessionIcons = { Morning: Sunrise, Evening: Sun, Night: Moon };
 
@@ -41,7 +41,7 @@ const CoachDashboard = () => {
       const { data } = await axios.get('/api/coaches/myprofile', config);
       setCoachProfile(data);
       setEditForm({
-        specialization: data.specialization || '',
+        specialization: data.specialization || 'Strength',
         bio: data.bio || '',
         availableSessions: data.availableSessions || [],
       });
@@ -70,7 +70,8 @@ const CoachDashboard = () => {
       setCoachProfile(data);
       alert('Profile updated successfully!');
     } catch (error) {
-      alert('Failed to save profile');
+      console.error('Save profile error:', error.response?.data || error);
+      alert('Failed to save profile: ' + (error.response?.data?.message || 'Unknown error'));
     } finally {
       setSaving(false);
     }

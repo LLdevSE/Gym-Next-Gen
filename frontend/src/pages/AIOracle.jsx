@@ -196,7 +196,7 @@ const AIOracle = () => {
                           <span key={i} className="px-4 py-1.5 bg-primary/10 text-primary border border-primary/30 rounded-full text-sm">{c}</span>
                        ))}
                     </div>
-                    <Link to="/coaches" className="bg-white text-background font-bold uppercase tracking-wider px-8 py-4 rounded hover:bg-gray-200 transition-colors shadow">
+                    <Link to="/coaches" state={{ targetSpecialty: blueprint.workout }} className="bg-white text-background font-bold uppercase tracking-wider px-8 py-4 rounded hover:bg-gray-200 transition-colors shadow">
                        View Targeted Coaches
                     </Link>
                  </div>
@@ -206,7 +206,7 @@ const AIOracle = () => {
                      <Users className="w-12 h-12 text-primary mb-4" />
                      <h3 className="text-xl text-white mb-2">Ready to execute the plan?</h3>
                      <p className="text-gray-400 mb-6 text-center max-w-lg">We have dynamically updated our coach directory to highlight trainers specialized in {blueprint.workout}.</p>
-                     <Link to="/coaches" className="bg-white text-background font-bold uppercase tracking-wider px-8 py-4 rounded hover:bg-gray-200 transition-colors shadow">
+                     <Link to="/coaches" state={{ targetSpecialty: blueprint.workout }} className="bg-white text-background font-bold uppercase tracking-wider px-8 py-4 rounded hover:bg-gray-200 transition-colors shadow">
                         View Targeted Coaches
                      </Link>
                   </div>

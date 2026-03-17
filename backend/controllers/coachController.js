@@ -47,20 +47,32 @@ const createCoachProfile = async (req, res) => {
 // @desc    Update a coach profile
 // @route   PUT /api/coaches/profile
 // @access  Private/Coach
-const updateCoachProfile = async (req, res) => {
-  const { specialization, bio, availableSessions } = req.body;
+const updateCoachProfile = async (req, res, next) => {
+  try {
+    const { specialization, bio, availableSessions } = req.body;
 
-  const coach = await CoachProfile.findOne({ user: req.user._id });
+    let coach = await CoachProfile.findOne({ user: req.user._id });
 
-  if (coach) {
-    coach.specialization = specialization || coach.specialization;
-    coach.bio = bio || coach.bio;
-    coach.availableSessions = availableSessions || coach.availableSessions;
+    if (coach) {
+      coach.specialization = specialization || coach.specialization;
+      coach.bio = bio || coach.bio;
+      coach.availableSessions = availableSessions || coach.availableSessions;
 
-    const updatedCoach = await coach.save();
-    res.json(updatedCoach);
-  } else {
-    res.status(404).json({ message: 'Coach profile not found' });
+      const updatedCoach = await coach.save();
+      res.json(updatedCoach);
+    } else {
+      coach = new CoachProfile({
+        user: req.user._id,
+        specialization,
+        bio,
+        availableSessions,
+      });
+      const createdCoach = await coach.save();
+      res.status(201).json(createdCoach);
+    }
+  } catch (error) {
+    console.error('Error updating coach profile:', error);
+    next(error);
   }
 };
 

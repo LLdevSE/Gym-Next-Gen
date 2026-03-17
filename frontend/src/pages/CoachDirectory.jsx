@@ -1,15 +1,29 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Users, Filter, Star, Clock, X } from 'lucide-react';
 
 const CoachDirectory = () => {
+  const location = useLocation();
+  const targetSpecialty = location.state?.targetSpecialty;
+
   const [coaches, setCoaches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterSpec, setFilterSpec] = useState('All');
   const [selectedCoach, setSelectedCoach] = useState(null); // For Booking Modal
   const { user } = useAuth();
+
+  useEffect(() => {
+    if (targetSpecialty) {
+      if (targetSpecialty.includes('Strength')) setFilterSpec('Strength');
+      else if (targetSpecialty.includes('CrossFit')) setFilterSpec('CrossFit');
+      else if (targetSpecialty.includes('Yoga')) setFilterSpec('Yoga');
+      else if (targetSpecialty.includes('HIIT')) setFilterSpec('HIIT');
+      else setFilterSpec('All');
+    }
+  }, [targetSpecialty]);
 
   useEffect(() => {
     const fetchCoaches = async () => {

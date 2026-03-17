@@ -6,10 +6,11 @@ import { motion } from 'framer-motion';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
-  const { cartItems } = useCart();
+  const { cartItems, clearCart } = useCart();
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    clearCart();
     logout();
     navigate('/login');
   };
