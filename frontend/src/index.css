@@ -35,3 +35,21 @@
     @apply bg-surface/60 backdrop-blur-lg border border-white/5 rounded-xl;
   }
 }
+
+@layer utilities {
+  .animate-float {
+    animation: float-base 6s ease-in-out infinite;
+  }
+  .animate-float-delayed {
+    animation: float-base 8s ease-in-out infinite reverse;
+  }
+}
+
+@keyframes float-base {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}

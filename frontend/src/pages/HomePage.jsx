@@ -79,100 +79,218 @@ const HomePage = () => {
   return (
     <div className="overflow-x-hidden">
 
-      {/* ─── Hero Section ─────────────────────────────────────────── */}
-      <section className="relative min-h-[90vh] flex items-center">
-        {/* Background Glow */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute -top-1/4 -left-1/4 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl" />
-          <div className="absolute top-1/4 right-0 w-[400px] h-[600px] bg-secondary/5 rounded-full blur-3xl" />
+      {/* ─── Premium Hero Section ─────────────────────────────────────────── */}
+      <section className="relative min-h-[95vh] flex items-center pt-24 pb-12 overflow-hidden">
+        {/* Elite Background Effects */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-primary/20 rounded-full blur-[120px] mix-blend-screen opacity-50 animate-pulse" />
+          <div className="absolute bottom-[-10%] right-[-10%] w-[40vw] h-[40vw] bg-secondary/20 rounded-full blur-[100px] mix-blend-screen opacity-50" />
+          <div className="absolute top-[30%] left-[40%] w-[20vw] h-[20vw] bg-white/5 rounded-full blur-[80px]" />
+          {/* Subtle Grid Pattern Overlay */}
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxwYXRoIGQ9Ik0wIDBoNDB2NDBIMHoiIGZpbGw9Im5vbmUiLz4KPHBhdGggZD0iTTAgMGg0MHYxSDB6bTAgMzl2MWg0MHYtMXonIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz4KPHBhdGggZD0iTTAgMHY0MGgxVjB6bTM5IDB2NDBoMVYweiIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIvPgo8L3N2Zz4=')] opacity-20" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/80 to-background" />
         </div>
 
-        <div className="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
-          {/* Left Content */}
-          <motion.div initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7 }}
-            className="space-y-8">
+        <div className="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+          {/* Left Content (Spans 7 columns on LG) */}
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="lg:col-span-7 space-y-10"
+          >
+            {/* Elegant Badge */}
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }} 
+              animate={{ opacity: 1, x: 0 }} 
+              transition={{ delay: 0.3 }}
+              className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md shadow-[0_0_15px_rgba(0,242,254,0.1)]"
+            >
+              <span className="flex h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(0,242,254,0.8)] animate-pulse"></span>
+              <span className="text-sm font-semibold text-white tracking-wide uppercase">Elite Fitness Experience</span>
+            </motion.div>
 
-            {/* Social Proof */}
-            <div className="flex items-center gap-3">
-              <div className="flex -space-x-2">
-                {avatars.map((src, i) => (
-                  <img key={i} src={src} alt="" className="w-9 h-9 rounded-full border-2 border-background object-cover" />
-                ))}
-              </div>
-              <div>
-                <p className="text-white font-semibold text-sm">10K+ Satisfied Members</p>
-                <div className="flex gap-0.5 mt-0.5">
-                  {[...Array(5)].map((_, i) => <Star key={i} className="w-3 h-3 fill-yellow-400 text-yellow-400" />)}
-                </div>
-              </div>
-            </div>
-
-            {/* Headline */}
-            <div>
-              <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-                className="text-5xl md:text-6xl lg:text-7xl font-heading text-white leading-tight">
-                Helps for your<br />
-                <span className="text-primary">ideal body</span>{' '}
-                fitness
+            {/* Premium Typography Headline */}
+            <div className="relative">
+              <motion.h1 
+                initial={{ opacity: 0, y: 20 }} 
+                animate={{ opacity: 1, y: 0 }} 
+                transition={{ delay: 0.4 }}
+                className="text-6xl md:text-7xl lg:text-[5.5rem] font-heading text-white leading-[1.1] tracking-tight"
+              >
+                Sculpt Your <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-white to-secondary drop-shadow-lg">
+                  Ultimate Physique
+                </span>
               </motion.h1>
-              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
-                className="mt-5 text-gray-400 text-lg max-w-md leading-relaxed">
-                Motivate yourself with benefits and positive reinforcement. Get personalized plans, coach bookings, and AI-powered progress tracking.
-              </motion.p>
+              {/* Decorative Accent under Title */}
+              <motion.div 
+                initial={{ width: 0 }} 
+                animate={{ width: "100px" }} 
+                transition={{ delay: 0.8, duration: 0.8 }}
+                className="mt-6 h-1 bg-gradient-to-r from-primary to-transparent rounded-full"
+              />
             </div>
 
-            {/* CTAs */}
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
-              className="flex flex-wrap items-center gap-4">
+            <motion.p 
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              transition={{ delay: 0.5 }}
+              className="text-gray-400 text-xl font-light max-w-2xl leading-relaxed"
+            >
+              Step into the future of fitness. Unleash your potential with our cutting-edge AI blueprint, world-class coaching, and a community built for greatness.
+            </motion.p>
+
+            {/* Modern Action Buttons */}
+            <motion.div 
+              initial={{ opacity: 0, y: 15 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              transition={{ delay: 0.6 }}
+              className="flex flex-wrap items-center gap-6"
+            >
               {user ? (
-                <Link to={dashboardPath}
-                  className="flex items-center gap-2 bg-primary text-background font-bold px-8 py-4 rounded-xl hover:bg-primary/90 hover:shadow-[0_0_25px_rgba(0,242,254,0.4)] transition-all text-base">
-                  Go to Dashboard <ArrowRight className="w-5 h-5" />
+                <Link to={dashboardPath} className="group relative">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-xl blur opacity-25 group-hover:opacity-60 transition duration-500"></div>
+                  <button className="relative flex items-center gap-3 bg-white text-background font-bold px-8 py-4 rounded-xl hover:scale-[1.02] transition-transform shadow-xl">
+                    Access Dashboard <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                  </button>
                 </Link>
               ) : (
-                <Link to="/register"
-                  className="flex items-center gap-2 bg-primary text-background font-bold px-8 py-4 rounded-xl hover:bg-primary/90 hover:shadow-[0_0_25px_rgba(0,242,254,0.4)] transition-all text-base">
-                  Start Training <ArrowRight className="w-5 h-5" />
+                <Link to="/register" className="group relative">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-xl blur opacity-30 group-hover:opacity-75 transition duration-500"></div>
+                  <button className="relative flex items-center gap-3 bg-primary text-background font-bold px-8 py-4 rounded-xl hover:scale-[1.02] transition-transform shadow-xl hover:shadow-[0_0_20px_rgba(0,242,254,0.4)] text-lg tracking-wide">
+                    Start Your Journey <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                  </button>
                 </Link>
               )}
-              <button
-                className="flex items-center gap-3 text-white font-medium px-4 py-4 hover:text-primary transition-colors group">
-                <span className="w-12 h-12 rounded-full border-2 border-white/20 flex items-center justify-center group-hover:border-primary/50 transition-colors">
-                  <Play className="w-4 h-4 fill-current ml-0.5" />
+              
+              <button className="group flex items-center gap-4 text-white font-medium px-4 py-4 hover:text-primary transition-colors">
+                <span className="relative flex items-center justify-center w-14 h-14 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm group-hover:border-primary/50 group-hover:bg-primary/10 transition-all duration-300">
+                  <Play className="w-5 h-5 ml-1 fill-current group-hover:scale-110 transition-transform" />
+                  {/* Subtle Radar Ring Ping */}
+                  <span className="absolute inset-0 rounded-full border border-white/30 animate-ping opacity-20"></span>
                 </span>
-                Watch Demo
+                <span className="text-lg tracking-wide">Watch Demo</span>
               </button>
             </motion.div>
 
-            {/* Quick Stats */}
-            <div className="flex gap-8 pt-4 border-t border-white/10">
-              <div>
-                <p className="text-3xl font-bold text-primary">50+</p>
-                <p className="text-xs text-gray-500 mt-1">Expert Coaches</p>
+            {/* Social Proof & Trust Metrics */}
+            <motion.div 
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              transition={{ delay: 0.8 }}
+              className="pt-10 flex flex-col sm:flex-row gap-8 sm:gap-12 items-start sm:items-center border-t border-white/10"
+            >
+              <div className="flex items-center gap-4">
+                <div className="flex -space-x-3">
+                  {avatars.map((src, i) => (
+                    <img key={i} src={src} alt="Member" className="w-12 h-12 rounded-full border-2 border-[#0a0a0a] object-cover shadow-lg" />
+                  ))}
+                  <div className="w-12 h-12 rounded-full border-2 border-[#0a0a0a] bg-surface flex items-center justify-center shadow-lg relative overflow-hidden">
+                    <div className="absolute inset-0 bg-primary/20 backdrop-blur-sm"></div>
+                    <span className="text-primary text-xs font-bold relative z-10">10K+</span>
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <div className="flex gap-1">
+                    {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400 drop-shadow-[0_0_5px_rgba(250,204,21,0.5)]" />)}
+                  </div>
+                  <span className="text-sm text-gray-400 mt-1 font-medium">Trusted worldwide</span>
+                </div>
               </div>
-              <div>
-                <p className="text-3xl font-bold text-secondary">200+</p>
-                <p className="text-xs text-gray-500 mt-1">Programs</p>
+
+              {/* Minimal Divider for Desktop */}
+              <div className="hidden sm:block w-px h-12 bg-white/10" />
+
+              <div className="flex items-center gap-6">
+                <div>
+                  <div className="flex items-baseline gap-1">
+                    <p className="text-3xl font-heading font-bold text-white">98</p>
+                    <span className="text-primary font-bold">%</span>
+                  </div>
+                  <p className="text-xs text-gray-500 uppercase tracking-widest mt-1">Success</p>
+                </div>
+                <div>
+                  <div className="flex items-baseline gap-1">
+                    <p className="text-3xl font-heading font-bold text-white">50</p>
+                    <span className="text-secondary font-bold">+</span>
+                  </div>
+                  <p className="text-xs text-gray-500 uppercase tracking-widest mt-1">Coaches</p>
+                </div>
               </div>
-              <div>
-                <p className="text-3xl font-bold text-white">98%</p>
-                <p className="text-xs text-gray-500 mt-1">Success Rate</p>
-              </div>
-            </div>
+            </motion.div>
           </motion.div>
 
-          {/* Right — Hero Image */}
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8 }}
-            className="relative flex justify-center lg:justify-end">
-            {/* Large watermark text */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
-              <span className="text-[130px] font-heading text-white/3 tracking-widest -rotate-90 translate-x-32">FITNESS</span>
+          {/* Right Content - Hero Visual (Spans 5 columns on LG) */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }} 
+            animate={{ opacity: 1, scale: 1 }} 
+            transition={{ duration: 1, delay: 0.2, type: "spring", stiffness: 50 }}
+            className="lg:col-span-5 relative mt-16 lg:mt-0 flex justify-center lg:justify-end"
+          >
+            {/* Monumental Watermark */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none overflow-hidden mix-blend-overlay w-full">
+              <span className="text-[180px] md:text-[220px] font-heading font-black text-white/5 tracking-tighter leading-none block text-center">GYM<br/>NEXT</span>
             </div>
-            <div className="relative">
-              <img src="/hero_trainers.png" alt="Fitness Trainers"
-                className="relative z-10 max-h-[520px] object-contain drop-shadow-2xl" />
-              {/* Glow under image */}
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-48 h-8 bg-primary/20 rounded-full blur-xl" />
+
+            <div className="relative group">
+              {/* Decorative Circle Behind Image */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] aspect-square rounded-full border border-white/5 bg-gradient-to-tr from-surface/50 to-transparent shadow-2xl transition-transform duration-700 group-hover:scale-105" />
+              
+              <img 
+                src="/hero_trainers.png" 
+                alt="Fitness Trainers"
+                className="relative z-10 w-full max-w-md lg:max-w-none max-h-[650px] object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-transform duration-700 group-hover:scale-[1.02]" 
+              />
+              
+              {/* Dynamic Bottom Glow */}
+              <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-3/4 h-12 bg-primary/30 rounded-full blur-2xl transition-opacity duration-500 group-hover:opacity-70" />
+
+              {/* Floating Glass UI Card - AI Blueprint */}
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, delay: 1 }}
+                className="absolute -left-4 md:-left-16 lg:-left-20 bottom-16 lg:bottom-24 z-20 glass-card p-4 rounded-2xl border border-white/10 shadow-2xl backdrop-blur-xl bg-background/40 max-w-[200px] animate-float"
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30">
+                    <Brain className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="text-white text-sm font-bold leading-tight">AI Blueprint</h4>
+                    <p className="text-xs text-primary font-medium mt-0.5">Ready</p>
+                  </div>
+                </div>
+                <div className="space-y-1.5 mt-3">
+                  <div className="h-1.5 w-full bg-surface rounded-full overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-primary to-secondary w-[85%] rounded-full" />
+                  </div>
+                  <p className="text-[10px] text-gray-400 text-right">Optimization 85%</p>
+                </div>
+              </motion.div>
+
+              {/* Floating Glass UI Card - Calories Burned */}
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, delay: 1.2 }}
+                className="absolute -right-2 top-20 z-20 glass-card p-4 rounded-xl border border-white/10 shadow-2xl backdrop-blur-xl bg-background/40 animate-float-delayed"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-xl bg-secondary/20 flex items-center justify-center border border-secondary/30">
+                    <Flame className="w-6 h-6 text-secondary" />
+                  </div>
+                  <div>
+                    <p className="text-[11px] text-gray-400 uppercase tracking-widest font-semibold">Calories</p>
+                    <div className="flex items-baseline gap-1">
+                      <h4 className="text-white text-xl font-heading font-bold">1,240</h4>
+                      <span className="text-xs text-secondary font-medium">kcal</span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
             </div>
           </motion.div>
         </div>
